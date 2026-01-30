@@ -1,0 +1,8 @@
+{
+    "figma_file_key": "V9fFusRtr1gh5rC8dmMwVQ",
+    "total_frames": 2,
+    "frames": [
+        {"name": "Page 1", "node_id": "153:184", "gt_image": "153-184.png", "target_route": "/"},
+        {"name": "Page 2", "node_id": "153:80", "gt_image": "153-80.png", "target_route": "/page-2"}
+    ]
+}

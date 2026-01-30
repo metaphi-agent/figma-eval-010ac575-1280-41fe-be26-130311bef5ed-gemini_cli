@@ -1,0 +1,24 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: 'DM Sans', sans-serif;
+
+  --color-primary: #2F1893;
+  --color-secondary: #E93A7D; /* Guessing a secondary accent, often pink in these */
+  --color-heading: #1E0E62;
+  --color-text: #151439; /* Dark blue-ish black */
+  --color-text-light: #15143966; /* Opacity for paragraph */
+  --color-background-dark: #2F1893;
+  --color-white: #FFFFFF;
+}
+
+body {
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  color: var(--color-text);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--color-heading);
+  font-weight: 700;
+}
