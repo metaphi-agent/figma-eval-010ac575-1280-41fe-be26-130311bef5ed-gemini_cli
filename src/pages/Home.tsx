@@ -1,78 +1,125 @@
 import React from 'react';
-import { Header } from '../components/layout/Header';
-import { Footer } from '../components/layout/Footer';
 import { Button } from '../components/ui/Button';
+import { Link } from 'react-router-dom';
 
-export const Home: React.FC = () => {
+const MiniPost = ({ title, date }: { title: string; date: string }) => (
+  <div className="flex items-center space-x-4 mb-6 group cursor-pointer">
+    <div className="w-24 h-20 bg-gray-200 rounded-lg flex-shrink-0 overflow-hidden">
+        <img src="https://placehold.co/100x80/e2e8f0/1e0e62?text=Post" alt="Post" className="w-full h-full object-cover group-hover:scale-105 transition-transform" />
+    </div>
+    <div>
+      <h5 className="font-bold text-heading leading-tight mb-1 group-hover:text-action transition-colors">{title}</h5>
+      <div className="text-xs text-gray-400 uppercase tracking-wider">{date}</div>
+    </div>
+  </div>
+);
+
+const Home = () => {
   return (
-    <div className="min-h-screen bg-white font-sans">
-      {/* Hero Section */}
-      <div className="relative bg-primary min-h-[800px] flex flex-col items-center justify-center text-center px-4 overflow-hidden rounded-b-[40px]">
-        <Header />
-        
-        {/* Background Mask/Blob */}
-        <div className="absolute inset-0 bg-primary z-0"></div>
-        <div className="absolute top-0 right-0 w-[50%] h-full bg-gradient-to-l from-white/5 to-transparent skew-x-12 transform origin-top-right"></div>
-        
-        <div className="relative z-10 max-w-4xl mx-auto pt-20">
-          <h5 className="text-white/70 tracking-widest uppercase font-bold text-sm mb-6">STARTUP 3</h5>
-          <h1 className="text-white text-6xl md:text-7xl font-bold mb-8 leading-tight">
-            Forget About Code
-          </h1>
-          <p className="text-white/80 text-xl md:text-2xl mb-12 max-w-2xl mx-auto leading-relaxed">
-            Startup Framework gives you complete freedom over your creative process — you don't have to think about any technical aspects. There are no limits and absolutely no coding.
-          </p>
-          <Button variant="fill" color="primary" size="lg" className="rounded-full !bg-[#482BE7] px-12 text-lg shadow-lg hover:shadow-xl transform transition-all hover:-translate-y-1">
-            Create an Account
-          </Button>
-        </div>
+    <div className="bg-white min-h-screen pt-20 pb-20">
+      <div className="container mx-auto px-4 max-w-6xl">
+        <div className="flex flex-col lg:flex-row gap-16">
+          
+          {/* Main Content (Left Column) */}
+          <div className="lg:w-2/3">
+            <article className="mb-20">
+                <div className="flex items-center space-x-2 text-sm font-bold tracking-widest text-primary/40 uppercase mb-4">
+                    <span>20 December</span>
+                </div>
+                
+                <h2 className="text-4xl md:text-5xl font-bold text-heading leading-tight mb-8">
+                    <Link to="/post" className="hover:text-action transition-colors">
+                        To these in the morning I sent the lead who was to enter the hole
+                    </Link>
+                </h2>
+                
+                <div className="prose prose-lg text-primary/60 mb-8">
+                    <p className="mb-6">
+                        This sounded nonsense to Alice, so she said nothing, but set off at once toward the Red Queen. To her surprise, she lost sight of her in a moment, and found herself walking in at the front-door again.
+                    </p>
+                    <p className="mb-6">
+                        For some minutes Alice stood without speaking, looking out in all directions over the country - and a most curious country it was.
+                    </p>
+                </div>
 
-        {/* User Card - Floating Element */}
-        <div className="relative z-10 mt-20 bg-white rounded-xl shadow-2xl p-6 flex items-center gap-6 max-w-md mx-auto transform rotate-[-2deg]">
-          <div className="w-16 h-16 rounded-full bg-gray-200 overflow-hidden">
-             {/* Placeholder for user image */}
-             <div className="w-full h-full bg-gray-300"></div>
-          </div>
-          <div className="text-left">
-            <div className="text-heading font-bold text-lg">Gene Whitfield</div>
-            <div className="text-text-light text-sm">@genewhitfield</div>
-          </div>
-          <div className="ml-auto text-primary font-bold">
-             Follow
-          </div>
-        </div>
-      </div>
+                <h3 className="text-2xl font-bold text-heading mb-4">Perfect for Your</h3>
+                <p className="text-primary/60 text-lg mb-8">
+                    The method is this: in an acre of ground you bury, at six inches distance and eight deep, a quantity of acorns, dates, chestnuts, and other mast or vegetables, whereof these animals are fondest then you drive.
+                </p>
 
-      {/* Content Section */}
-      <div className="py-24 px-4 sm:px-8 lg:px-20 max-w-7xl mx-auto">
-         <div className="grid md:grid-cols-2 gap-16 items-center">
+                <figure className="mb-10">
+                    <img src="./assets/images/post-image-2.png" alt="Article visual" className="w-full rounded-lg shadow-sm mb-2" />
+                    <figcaption className="text-sm text-gray-400">photo by Denis</figcaption>
+                </figure>
+
+                <p className="text-primary/60 text-lg mb-8">
+                    The tattered remains of a checked curtain were drawn round the bed's head, to exclude the wind, which, however, made its way into the comfortless room through the numerous chinks in the door.
+                </p>
+
+                <figure className="mb-10">
+                    <img src="./assets/images/post-image-1.png" alt="Article visual" className="w-full rounded-lg shadow-sm mb-2" />
+                    <figcaption className="text-sm text-gray-400">photo by Denis</figcaption>
+                </figure>
+
+                <p className="text-primary/60 text-lg mb-8">
+                    When the last 'natural' had been declared, and the profit and loss account of fish and sixpences adjusted, to the satisfaction of all parties, Mr. Bob Sawyer rang for supper, and the visitors squeezed.
+                </p>
+            </article>
+
+            {/* Pagination / Load More */}
+            <div className="flex justify-center">
+                <Button variant="primary" size="lg" className="rounded-full">Load More</Button>
+            </div>
+          </div>
+
+          {/* Sidebar (Right Column) */}
+          <div className="lg:w-1/3 space-y-16">
+            
+            {/* Last Seen */}
             <div>
-               <h3 className="text-secondary font-bold uppercase tracking-wider mb-4">FREE SAMPLE</h3>
-               <h2 className="text-heading text-4xl font-bold mb-6">Powerful Generator and Free Figma Sources</h2>
-               <p className="text-text-light text-lg mb-8 leading-relaxed">
-                  Startup Framework contains components and complex blocks which can easily be integrated into almost any design. All of the components are made in the same style, and can easily be integrated into projects, allowing you to create hundreds of solutions.
-               </p>
+                <h4 className="text-sm font-bold tracking-widest text-primary/40 uppercase mb-8">Last Seen</h4>
+                <div className="space-y-2">
+                    <MiniPost title="There have not been any since we left" date="20 Dec" />
+                    <MiniPost title="Whatever the case may be, I am not" date="18 Dec" />
+                    <MiniPost title="It was a long difficult week for me" date="15 Dec" />
+                    <MiniPost title="We have a lot of things to do" date="12 Dec" />
+                    <MiniPost title="I have been working on this for a long time" date="10 Dec" />
+                </div>
             </div>
-            <div className="grid grid-cols-2 gap-8">
-               <div className="p-8 border border-gray-100 rounded-2xl shadow-sm hover:shadow-md transition-shadow">
-                  <div className="w-12 h-12 bg-primary/10 rounded-full mb-6 flex items-center justify-center text-primary">
-                     <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zm0 9l2.5-1.25L12 8.5l-2.5 1.25L12 11zm0 2.5l-5-2.5-5 2.5L12 22l10-8.5-5-2.5-5 2.5z"/></svg>
-                  </div>
-                  <h4 className="text-heading font-bold text-xl mb-2">Components</h4>
-                  <p className="text-text-light">Lots of components for every taste and color.</p>
-               </div>
-               <div className="p-8 border border-gray-100 rounded-2xl shadow-sm hover:shadow-md transition-shadow mt-8">
-                  <div className="w-12 h-12 bg-secondary/10 rounded-full mb-6 flex items-center justify-center text-secondary">
-                     <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14z"/></svg>
-                  </div>
-                  <h4 className="text-heading font-bold text-xl mb-2">Complex</h4>
-                  <p className="text-text-light">Many complex blocks for different purposes.</p>
-               </div>
-            </div>
-         </div>
-      </div>
 
-      <Footer />
+            {/* Newsletter */}
+            <div className="bg-gray-50 p-8 rounded-2xl border-2 border-gray-100">
+                <h4 className="text-xl font-bold text-heading mb-2">Newsletter</h4>
+                <p className="text-primary/60 mb-6">Get our news earlier, let’s get in touch.</p>
+                
+                <div className="flex gap-2">
+                    <input 
+                        type="email" 
+                        placeholder="Your email" 
+                        className="flex-1 bg-white border-2 border-gray-200 rounded-full px-4 py-2 text-sm focus:outline-none focus:border-action transition-colors"
+                    />
+                    <Button size="sm" className="!px-6">Join</Button>
+                </div>
+            </div>
+
+            {/* Most Popular */}
+            <div>
+                <h4 className="text-sm font-bold tracking-widest text-primary/40 uppercase mb-8">Most Popular</h4>
+                <div className="space-y-2">
+                    <MiniPost title="There have not been any since we left" date="20 Dec" />
+                    <MiniPost title="Whatever the case may be, I am not" date="18 Dec" />
+                    <MiniPost title="It was a long difficult week for me" date="15 Dec" />
+                    <MiniPost title="We have a lot of things to do" date="12 Dec" />
+                    <MiniPost title="I have been working on this for a long time" date="10 Dec" />
+                </div>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
     </div>
   );
 };
+
+export default Home;

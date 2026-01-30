@@ -1,28 +1,28 @@
 #!/usr/bin/env python3
 """
-Write or update figma-to-code session manifest.
+Generic manifest logger for agent workflows.
+
+The agent reads SKILL.md to understand workflow steps, then uses this
+generic tool to document progress. This script knows nothing about
+workflow structure - it just provides logging primitives.
 
 Usage:
-    # Initialize after extraction
-    python write_manifest.py <manifest_path> extracted <figma_file_key>
+    # Log step progress
+    python write_manifest.py <path> step "Extract from Figma" --status=done
+    python write_manifest.py <path> step "Build Components" --status=in_progress
 
-    # Update to building phase
-    python write_manifest.py <manifest_path> building
+    # Record artifacts (key-value)
+    python write_manifest.py <path> artifact figma_file_key abc123
+    python write_manifest.py <path> artifact preview_url https://...
 
-    # Save preview URL (Modal sandbox)
-    python write_manifest.py <manifest_path> preview <preview_url>
-
-    # Complete with dist path
-    python write_manifest.py <manifest_path> complete <dist_path>
+    # Add context notes
+    python write_manifest.py <path> note "Built Header, Footer. Pending: Hero"
 
 Output:
     SUCCESS:<manifest_path>
     ERROR:<error_message>
-
-Example:
-    $ python write_manifest.py /work/123/figma-to-code/manifest.json extracted abc123
-    SUCCESS:/work/123/figma-to-code/manifest.json
 """
+import argparse
 import json
 import os
 import sys
@@ -46,53 +46,67 @@ def save_manifest(path: str, manifest: dict) -> None:
 
 
 def main():
-    if len(sys.argv) < 3:
-        print("Usage: python write_manifest.py <manifest_path> <command> [args...]", file=sys.stderr)
-        sys.exit(1)
+    parser = argparse.ArgumentParser(description="Generic manifest logger")
+    parser.add_argument("manifest_path", help="Path to manifest.json")
+    subparsers = parser.add_subparsers(dest="command", required=True)
 
-    manifest_path = sys.argv[1]
-    command = sys.argv[2]
+    # step - log workflow step progress
+    p_step = subparsers.add_parser("step", help="Log step progress")
+    p_step.add_argument("name", help="Step name (from SKILL.md)")
+    p_step.add_argument("--status", choices=["pending", "in_progress", "done", "failed"], default="done")
+    p_step.add_argument("--note", help="Optional note about this step")
+
+    # artifact - record key-value artifact
+    p_artifact = subparsers.add_parser("artifact", help="Record an artifact")
+    p_artifact.add_argument("key", help="Artifact key (e.g., preview_url, figma_file_key)")
+    p_artifact.add_argument("value", help="Artifact value")
+
+    # note - free-form context
+    p_note = subparsers.add_parser("note", help="Add a context note")
+    p_note.add_argument("text", help="Note text")
+
+    args = parser.parse_args()
 
     try:
-        manifest = load_manifest(manifest_path)
+        manifest = load_manifest(args.manifest_path)
+        now = datetime.now(timezone.utc).isoformat()
 
-        # Initialize session_id if new manifest
+        # Initialize structure
         if "session_id" not in manifest:
-            manifest["session_id"] = f"figma_{datetime.now(timezone.utc).strftime('%Y%m%d_%H%M%S')}"
-            manifest["created_at"] = datetime.now(timezone.utc).isoformat()
+            manifest["session_id"] = f"session_{datetime.now(timezone.utc).strftime('%Y%m%d_%H%M%S')}"
+            manifest["created_at"] = now
+        if "steps" not in manifest:
+            manifest["steps"] = []
+        if "artifacts" not in manifest:
+            manifest["artifacts"] = {}
+        if "notes" not in manifest:
+            manifest["notes"] = []
 
-        manifest["updated_at"] = datetime.now(timezone.utc).isoformat()
+        manifest["updated_at"] = now
 
-        if command == "extracted":
-            if len(sys.argv) != 4:
-                print("Usage: python write_manifest.py <path> extracted <figma_file_key>", file=sys.stderr)
-                sys.exit(1)
-            manifest["phase"] = "extracted"
-            manifest["figma_file_key"] = sys.argv[3]
+        if args.command == "step":
+            # Find existing step or create new
+            existing = next((s for s in manifest["steps"] if s["name"] == args.name), None)
+            if existing:
+                existing["status"] = args.status
+                existing["updated_at"] = now
+                if args.note:
+                    existing["note"] = args.note
+            else:
+                step_entry = {"name": args.name, "status": args.status, "at": now}
+                if args.note:
+                    step_entry["note"] = args.note
+                manifest["steps"].append(step_entry)
 
-        elif command == "building":
-            manifest["phase"] = "building"
+        elif args.command == "artifact":
+            manifest["artifacts"][args.key] = args.value
+            manifest["artifacts"][f"{args.key}_at"] = now
 
-        elif command == "preview":
-            if len(sys.argv) != 4:
-                print("Usage: python write_manifest.py <path> preview <preview_url>", file=sys.stderr)
-                sys.exit(1)
-            manifest["preview_url"] = sys.argv[3]
+        elif args.command == "note":
+            manifest["notes"].append({"text": args.text, "at": now})
 
-        elif command == "complete":
-            if len(sys.argv) != 4:
-                print("Usage: python write_manifest.py <path> complete <dist_path>", file=sys.stderr)
-                sys.exit(1)
-            manifest["phase"] = "complete"
-            manifest["dist_path"] = sys.argv[3]
-            manifest["completed_at"] = datetime.now(timezone.utc).isoformat()
-
-        else:
-            print(f"ERROR:unknown_command:{command}")
-            sys.exit(1)
-
-        save_manifest(manifest_path, manifest)
-        print(f"SUCCESS:{manifest_path}")
+        save_manifest(args.manifest_path, manifest)
+        print(f"SUCCESS:{args.manifest_path}")
 
     except Exception as e:
         print(f"ERROR:{str(e)}")

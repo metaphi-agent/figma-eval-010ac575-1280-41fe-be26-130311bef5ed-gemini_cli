@@ -7,18 +7,23 @@ description: Convert Figma designs to production-ready frontend code.
 
 Convert Figma designs to production React code with Tailwind v4.
 
-## Step 0: Check Manifest
+## Step 0: Check Manifest & Log Progress
+
+Read `{project_root}/manifest.json` if it exists. It shows completed steps, artifacts, and notes from prior runs. Resume from where you left off.
+
+**Log your progress** after completing each step using the generic manifest logger:
 
 ```bash
-python {skill_dir}/scripts/check_manifest.py {project_root}/figma-to-code/manifest.json
-```
+# Mark steps done (use step names from this SKILL.md)
+python {skill_dir}/scripts/write_manifest.py {project_root}/manifest.json step "Step 1: Extract from Figma" --status=done
 
-| Output | Action |
-|--------|--------|
-| `COMPLETE:<path>` | Done, return result |
-| `RESUME:building` | Skip to Step 6 |
-| `RESUME:extracted` | Skip to Step 3 |
-| `FRESH:*` | Start from Step 1 |
+# Record artifacts
+python {skill_dir}/scripts/write_manifest.py {project_root}/manifest.json artifact figma_file_key abc123
+python {skill_dir}/scripts/write_manifest.py {project_root}/manifest.json artifact preview_url https://...
+
+# Add notes for context
+python {skill_dir}/scripts/write_manifest.py {project_root}/manifest.json note "Built Header, Footer. Pending: Hero, Sidebar"
+``` 
 
 ## Step 1: Extract from Figma
 
@@ -80,7 +85,7 @@ mcp__figma__export_node_images(file_key, node_ids, output_dir, format="svg", sca
 - All `<img>` tags need `alt` attributes
 - Photos below the fold get `loading="lazy"`
 
-Save tokens to `{project_root}/figma-to-code/design_tokens.json`
+Save tokens to `{project_root}/design_tokens.json`
 
 ## Step 2: Export Ground Truth
 
@@ -98,7 +103,7 @@ Write `ground_truth/manifest.json`:
 }
 ```
 
-Update manifest: `python {skill_dir}/scripts/write_manifest.py {project_root}/figma-to-code/manifest.json extracted {figma_file_key}`
+Log progress: step done + record `figma_file_key` artifact.
 
 ## Step 3: Visual Analysis
 
@@ -182,7 +187,7 @@ Creates project with correct Vite config (`base: './'` for GCS, `allowedHosts: t
 
 ## Step 6: Generate Components
 
-Update manifest: `python {skill_dir}/scripts/write_manifest.py {project_root}/figma-to-code/manifest.json building`
+Log progress: mark step in_progress, add notes about components built/pending.
 
 ### Performance Requirements
 
@@ -223,10 +228,7 @@ mcp__app_preview__create_app_preview(
 
 Creates a Modal sandbox running `npm run dev`. The preview URL is used by the verifier to take screenshots.
 
-Save the preview URL to manifest:
-```bash
-python {skill_dir}/scripts/write_manifest.py {project_root}/figma-to-code/manifest.json preview <preview_url>
-```
+Log progress: record `preview_url` artifact.
 
 ### 7b: Push to GitHub
 
@@ -243,7 +245,7 @@ cd {project_root} && npm run build
 
 Creates `dist/` folder for permanent GCS static archive.
 
-Update manifest: `python {skill_dir}/scripts/write_manifest.py {project_root}/figma-to-code/manifest.json complete {project_root}/dist`
+Log progress: mark step done, record `dist_path` artifact.
 
 ## Multi-Turn Iteration
 
