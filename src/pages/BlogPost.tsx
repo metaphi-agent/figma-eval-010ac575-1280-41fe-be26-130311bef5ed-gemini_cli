@@ -6,12 +6,12 @@ const BlogPost = () => {
   return (
     <div className="bg-white min-h-screen pb-20">
       {/* Hero Section / Header */}
-      <div className="relative pt-20 pb-10 px-4 md:px-0">
+      <div className="relative pt-32 pb-20 px-4 md:px-0 bg-[#2F1893] text-white -mt-20">
          <div className="max-w-4xl mx-auto text-center">
-            <div className="text-sm font-bold tracking-widest text-white uppercase mb-4 bg-action inline-block px-3 py-1 rounded-full">
+            <div className="text-sm font-bold tracking-widest text-action uppercase mb-4 inline-block">
               Splashproof Design
             </div>
-            <h1 className="text-4xl md:text-6xl font-bold text-heading leading-tight mb-8">
+            <h1 className="text-4xl md:text-6xl font-bold mb-8 leading-tight">
               How To Protect Computer.<br />Very Useful Tips
             </h1>
             
@@ -21,18 +21,18 @@ const BlogPost = () => {
                 <img 
                   src="./assets/images/user-avatar.png" 
                   alt="Author" 
-                  className="w-20 h-20 rounded-full object-cover border-4 border-white shadow-lg"
+                  className="w-20 h-20 rounded-full object-cover border-4 border-white/20 shadow-lg"
                 />
                 <div className="text-left">
-                  <div className="text-heading font-bold text-xl">Noah Buscher</div>
-                  <div className="text-gray-400 text-sm">Product Designer</div>
+                  <div className="font-bold text-xl">Noah Buscher</div>
+                  <div className="text-white/60 text-sm">Product Designer</div>
                 </div>
               </div>
               
-              <div className="flex space-x-4 text-gray-300">
-                <a href="#" className="hover:text-action transition-colors"><FaTwitter /></a>
-                <a href="#" className="hover:text-action transition-colors"><FaFacebookF /></a>
-                <a href="#" className="hover:text-action transition-colors"><FaMediumM /></a>
+              <div className="flex space-x-6 text-white/60">
+                <a href="#" className="hover:text-white transition-colors"><FaTwitter size={20} /></a>
+                <a href="#" className="hover:text-white transition-colors"><FaFacebookF size={20} /></a>
+                <a href="#" className="hover:text-white transition-colors"><FaMediumM size={20} /></a>
               </div>
             </div>
          </div>

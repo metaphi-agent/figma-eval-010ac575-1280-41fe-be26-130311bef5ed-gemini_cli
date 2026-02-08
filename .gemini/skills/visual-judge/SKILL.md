@@ -17,18 +17,15 @@ Compare deployed app against ground truth screenshots, scoring on coverage and c
 └── ...
 ```
 
-**App Screenshots (write):** `figma-evals` volume
+**Visual Judge Working Dir (write):** `figma-env-evals` volume
 ```
-/figma-evals/results/{session_id}/app_screenshots/
-├── Login_Page.png
-└── ...
-```
-
-**Output Files (write):** `figma-evals` volume
-```
-/figma-evals/{run_id}/
+/figma-env-evals/{run_id}/
 ├── output_grade.json    # Aggregated rubric scores
-└── vlm_comparison.json  # Per-frame comparison details
+├── vlm_comparison.json  # Per-frame comparison details
+└── visual_judge/        # Working directory
+    ├── app_screenshots/
+    ├── figma_screenshots/
+    └── .claude/
 ```
 
 ## Workflow
@@ -61,20 +58,26 @@ Read `{project_root}/ground_truth/manifest.json`:
 
 ### Step 2: Screenshot Deployed App
 
-For each frame in manifest:
+For each frame in manifest, use the screenshot MCP (saves to disk, returns path only - no base64 bloat):
 ```
-# Navigate to route
-mcp__playwright__browser_navigate(url="{deployed_url}{target_route}")
+# Desktop viewport (1280x800)
+mcp__screenshot__take_screenshot(
+    url="{deployed_url}{target_route}",
+    output_path="{work_dir}/app_screenshots/{name}.png",
+    width=1280,
+    height=800
+)
 
-# Set viewport based on frame.viewport
-if viewport == "desktop":
-    mcp__playwright__browser_resize(width=1280, height=800)
-elif viewport == "mobile":
-    mcp__playwright__browser_resize(width=375, height=812)
-
-# Screenshot
-mcp__playwright__browser_take_screenshot(filename="{name}.png")
+# Mobile viewport (375x812)
+mcp__screenshot__take_screenshot(
+    url="{deployed_url}{target_route}",
+    output_path="{work_dir}/app_screenshots/{name}.png",
+    width=375,
+    height=812
+)
 ```
+
+Returns: `{status: "success", path: "/path/to/file.png", size_bytes: 12345}` - no base64.
 
 ### Step 3: Compare with VLM Judge
 
@@ -131,6 +134,7 @@ mcp__vlm_judge__vlm_judge_gemini_3(
 
 ## Dependencies
 
-- Playwright MCP for app screenshots
-- VLM Judge MCP for visual comparison
+- Screenshot MCP for app screenshots (saves to disk, no base64 context bloat)
+- Playwright MCP for navigation/interaction if needed
+- VLM Judge MCP for visual comparison (uploads to GCS, calls Gemini)
 - Output rubrics from `/metaphi-rubrics/figma/output/rubrics.json`

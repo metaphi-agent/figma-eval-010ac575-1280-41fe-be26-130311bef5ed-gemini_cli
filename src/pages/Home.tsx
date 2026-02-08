@@ -2,13 +2,13 @@ import React from 'react';
 import { Button } from '../components/ui/Button';
 import { Link } from 'react-router-dom';
 
-const MiniPost = ({ title, date }: { title: string; date: string }) => (
+const MiniPost = ({ title, date, image }: { title: string; date: string; image: string }) => (
   <div className="flex items-center space-x-4 mb-6 group cursor-pointer">
     <div className="w-24 h-20 bg-gray-200 rounded-lg flex-shrink-0 overflow-hidden">
-        <img src="https://placehold.co/100x80/e2e8f0/1e0e62?text=Post" alt="Post" className="w-full h-full object-cover group-hover:scale-105 transition-transform" />
+        <img src={image} alt={title} className="w-full h-full object-cover group-hover:scale-105 transition-transform" loading="lazy" />
     </div>
     <div>
-      <h5 className="font-bold text-heading leading-tight mb-1 group-hover:text-action transition-colors">{title}</h5>
+      <h5 className="font-bold text-heading leading-tight mb-1 group-hover:text-action transition-colors line-clamp-2">{title}</h5>
       <div className="text-xs text-gray-400 uppercase tracking-wider">{date}</div>
     </div>
   </div>
@@ -48,7 +48,7 @@ const Home = () => {
                 </p>
 
                 <figure className="mb-10">
-                    <img src="./assets/images/post-image-2.png" alt="Article visual" className="w-full rounded-lg shadow-sm mb-2" />
+                    <img src="./assets/images/home-hero-1.png" alt="Article visual" className="w-full rounded-lg shadow-sm mb-2" loading="lazy" />
                     <figcaption className="text-sm text-gray-400">photo by Denis</figcaption>
                 </figure>
 
@@ -57,7 +57,7 @@ const Home = () => {
                 </p>
 
                 <figure className="mb-10">
-                    <img src="./assets/images/post-image-1.png" alt="Article visual" className="w-full rounded-lg shadow-sm mb-2" />
+                    <img src="./assets/images/home-hero-2.png" alt="Article visual" className="w-full rounded-lg shadow-sm mb-2" loading="lazy" />
                     <figcaption className="text-sm text-gray-400">photo by Denis</figcaption>
                 </figure>
 
@@ -78,12 +78,12 @@ const Home = () => {
             {/* Last Seen */}
             <div>
                 <h4 className="text-sm font-bold tracking-widest text-primary/40 uppercase mb-8">Last Seen</h4>
-                <div className="space-y-2">
-                    <MiniPost title="There have not been any since we left" date="20 Dec" />
-                    <MiniPost title="Whatever the case may be, I am not" date="18 Dec" />
-                    <MiniPost title="It was a long difficult week for me" date="15 Dec" />
-                    <MiniPost title="We have a lot of things to do" date="12 Dec" />
-                    <MiniPost title="I have been working on this for a long time" date="10 Dec" />
+                <div className="space-y-6">
+                    <MiniPost title="There have not been any since we left" date="19 Dec" image="./assets/images/post-1.png" />
+                    <MiniPost title="Whatever the case may be, I am not" date="13 Dec" image="./assets/images/post-2.png" />
+                    <MiniPost title="It was a long difficult week for me" date="21 Dec" image="./assets/images/post-3.png" />
+                    <MiniPost title="We have a lot of things to do" date="10 Dec" image="./assets/images/post-4.png" />
+                    <MiniPost title="I have been working on this for a long time" date="12 Dec" image="./assets/images/post-5.png" />
                 </div>
             </div>
 
@@ -105,12 +105,12 @@ const Home = () => {
             {/* Most Popular */}
             <div>
                 <h4 className="text-sm font-bold tracking-widest text-primary/40 uppercase mb-8">Most Popular</h4>
-                <div className="space-y-2">
-                    <MiniPost title="There have not been any since we left" date="20 Dec" />
-                    <MiniPost title="Whatever the case may be, I am not" date="18 Dec" />
-                    <MiniPost title="It was a long difficult week for me" date="15 Dec" />
-                    <MiniPost title="We have a lot of things to do" date="12 Dec" />
-                    <MiniPost title="I have been working on this for a long time" date="10 Dec" />
+                <div className="space-y-6">
+                    <MiniPost title="There have not been any since we left" date="14 Dec" image="./assets/images/post-6.png" />
+                    <MiniPost title="Whatever the case may be, I am not" date="21 Dec" image="./assets/images/post-7.png" />
+                    <MiniPost title="It was a long difficult week for me" date="18 Dec" image="./assets/images/post-8.png" />
+                    <MiniPost title="We have a lot of things to do" date="18 Dec" image="./assets/images/post-9.png" />
+                    <MiniPost title="I have been working on this for a long time" date="15 Dec" image="./assets/images/post-10.png" />
                 </div>
             </div>
 

@@ -9,20 +9,37 @@ Convert Figma designs to production React code with Tailwind v4.
 
 ## Step 0: Check Manifest & Log Progress
 
-Read `{project_root}/manifest.json` if it exists. It shows completed steps, artifacts, and notes from prior runs. Resume from where you left off.
+Read `{project_root}/manifest.json` if it exists. It shows completed steps and URLs from prior runs. Resume from where you left off.
 
-**Log your progress** after completing each step using the generic manifest logger:
+**Manifest structure (flat JSON):**
+```json
+{
+  "preview_url": "https://...",
+  "deployed_url": "https://...",
+  "github_repo_url": "https://...",
+  "completed_steps": [
+    "Step 1: Extract from Figma",
+    "Step 2: Export Ground Truth",
+    "Step 3: Visual Analysis",
+    "Step 4: Component & Interaction Audit",
+    "Step 5: Scaffold Project",
+    "Step 6: Generate Components",
+    "Step 7: Deploy & Push"
+  ],
+  "updated_at": "2026-01-31T..."
+}
+```
+
+**Log your progress** after completing each step:
 
 ```bash
-# Mark steps done (use step names from this SKILL.md)
-python {skill_dir}/scripts/write_manifest.py {project_root}/manifest.json step "Step 1: Extract from Figma" --status=done
+# Record URLs (flat key-value)
+python {skill_dir}/scripts/write_manifest.py {project_root}/manifest.json preview_url "https://..."
+python {skill_dir}/scripts/write_manifest.py {project_root}/manifest.json deployed_url "https://..."
+python {skill_dir}/scripts/write_manifest.py {project_root}/manifest.json github_repo_url "https://..."
 
-# Record artifacts
-python {skill_dir}/scripts/write_manifest.py {project_root}/manifest.json artifact figma_file_key abc123
-python {skill_dir}/scripts/write_manifest.py {project_root}/manifest.json artifact preview_url https://...
-
-# Add notes for context
-python {skill_dir}/scripts/write_manifest.py {project_root}/manifest.json note "Built Header, Footer. Pending: Hero, Sidebar"
+# Mark steps done (appends to completed_steps array)
+python {skill_dir}/scripts/write_manifest.py {project_root}/manifest.json step "Step 1: Extract from Figma"
 ``` 
 
 ## Step 1: Extract from Figma
@@ -224,11 +241,13 @@ mcp__app_preview__create_app_preview(
     task_id=<task_id>,
     project_root="{project_root}"
 )
+# Returns: {"preview_url": "https://..."}
 ```
 
-Creates a Modal sandbox running `npm run dev`. The preview URL is used by the verifier to take screenshots.
-
-Log progress: record `preview_url` artifact.
+Save to manifest:
+```bash
+python {skill_dir}/scripts/write_manifest.py {project_root}/manifest.json preview_url "<preview_url>"
+```
 
 ### 7b: Push to GitHub
 
@@ -237,15 +256,35 @@ mcp__github__create_repository(name=<repo_name>, org="metaphi-agent")
 mcp__github__push_files(...)  # All generated files
 ```
 
-### 7c: Build for GCS Archive
+Save to manifest:
+```bash
+python {skill_dir}/scripts/write_manifest.py {project_root}/manifest.json github_repo_url "https://github.com/metaphi-agent/<repo_name>"
+```
+
+### 7c: Build & Deploy to GCS
 
 ```bash
 cd {project_root} && npm run build
 ```
 
-Creates `dist/` folder for permanent GCS static archive.
+```python
+mcp__gcs_uploader__upload_dist_to_gcs(
+    local_path="{project_root}/dist",
+    gcs_prefix="figma-{agent_harness}-agent/{task_id}"
+)
+# Returns: {"url": "https://storage.googleapis.com/...", "success": true}
+```
 
-Log progress: mark step done, record `dist_path` artifact.
+Save to manifest:
+```bash
+python {skill_dir}/scripts/write_manifest.py {project_root}/manifest.json deployed_url "<url>"
+```
+
+### 7d: Mark Complete
+
+```bash
+python {skill_dir}/scripts/write_manifest.py {project_root}/manifest.json step "Step 7: Deploy & Push"
+```
 
 ## Multi-Turn Iteration
 
