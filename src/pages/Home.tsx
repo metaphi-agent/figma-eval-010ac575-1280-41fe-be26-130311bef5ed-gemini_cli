@@ -3,7 +3,7 @@ import { Button } from '../components/ui/Button';
 import { Link } from 'react-router-dom';
 
 const MiniPost = ({ title, date, image }: { title: string; date: string; image: string }) => (
-  <div className="flex items-center space-x-4 mb-6 group cursor-pointer">
+  <Link to="/" className="flex items-center space-x-4 mb-6 group cursor-pointer">
     <div className="w-24 h-20 bg-gray-200 rounded-lg flex-shrink-0 overflow-hidden">
         <img src={image} alt={title} className="w-full h-full object-cover group-hover:scale-105 transition-transform" loading="lazy" />
     </div>
@@ -11,7 +11,7 @@ const MiniPost = ({ title, date, image }: { title: string; date: string; image: 
       <h5 className="font-bold text-heading leading-tight mb-1 group-hover:text-action transition-colors line-clamp-2">{title}</h5>
       <div className="text-xs text-gray-400 uppercase tracking-wider">{date}</div>
     </div>
-  </div>
+  </Link>
 );
 
 const Home = () => {
@@ -28,7 +28,7 @@ const Home = () => {
                 </div>
                 
                 <h2 className="text-4xl md:text-5xl font-bold text-heading leading-tight mb-8">
-                    <Link to="/post" className="hover:text-action transition-colors">
+                    <Link to="/" className="hover:text-action transition-colors">
                         To these in the morning I sent the lead who was to enter the hole
                     </Link>
                 </h2>

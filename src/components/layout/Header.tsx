@@ -9,9 +9,9 @@ export const Header: React.FC = () => {
       
       <nav className="hidden md:flex gap-8 text-lg font-medium text-heading">
         <Link to="/" className="hover:text-action transition-colors">Home</Link>
-        <Link to="/post" className="hover:text-action transition-colors">Features</Link>
+        <Link to="/" className="hover:text-action transition-colors">Features</Link>
         <a href="#" className="hover:text-action transition-colors">Pricing</a>
-        <a href="#" className="hover:text-action transition-colors">Blog</a>
+        <Link to="/page-2" className="hover:text-action transition-colors">Blog</Link>
         <a href="#" className="hover:text-action transition-colors">Behance</a>
       </nav>
 

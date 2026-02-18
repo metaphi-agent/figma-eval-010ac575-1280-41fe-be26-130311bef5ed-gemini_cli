@@ -15,8 +15,8 @@ function App() {
         <main className="flex-grow pt-20">
             <Suspense fallback={<div className="flex h-[50vh] items-center justify-center">Loading...</div>}>
             <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/post" element={<BlogPost />} />
+                <Route path="/" element={<BlogPost />} />
+                <Route path="/page-2" element={<Home />} />
             </Routes>
             </Suspense>
         </main>
